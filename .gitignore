@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ROS / colcon 构建产物
+build/
+install/
+log/
+
+# 运行产物（bag 体积大，不入库）
+*.bag
+*.db3
+*.mcap
+bag/
+session.log
+session_plain.log
+record.log
+ros_log/
+
+# 评估产物（每次运行都会变）
+trajectory_info.json
+trajectory_points.csv
+timeseries_plotjuggler.csv
+evaluation.md
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+*.swp
+.DS_Store

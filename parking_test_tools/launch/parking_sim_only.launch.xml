@@ -1,0 +1,14 @@
+<launch>
+  <!-- 只启动 Autoware 仿真，不录包、不监控。
+       用于对照排查：确认问题不是本工具引入的。 -->
+
+  <arg name="map_path" default="$(env HOME)/autoware_data/maps/sample-map-planning"/>
+  <arg name="vehicle_model" default="sample_vehicle"/>
+  <arg name="sensor_model" default="sample_sensor_kit"/>
+
+  <include file="$(find-pkg-share autoware_launch)/launch/planning_simulator.launch.xml">
+    <arg name="map_path" value="$(var map_path)"/>
+    <arg name="vehicle_model" value="$(var vehicle_model)"/>
+    <arg name="sensor_model" value="$(var sensor_model)"/>
+  </include>
+</launch>

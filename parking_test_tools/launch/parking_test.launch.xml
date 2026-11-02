@@ -1,0 +1,31 @@
+<launch>
+  <!-- 泊车规划测试一体化启动入口。
+       做三件事：拉起 Autoware 仿真 / 后台录包 / 前台显示状态监控。
+       用法见 README.md。 -->
+
+  <arg name="map_path" default="$(env HOME)/autoware_data/maps/sample-map-planning"/>
+  <arg name="vehicle_model" default="sample_vehicle"/>
+  <arg name="sensor_model" default="sample_sensor_kit"/>
+
+  <arg name="record_bag" default="true" description="是否录包"/>
+  <arg name="watch_state" default="true" description="是否显示状态监控"/>
+  <arg name="record_tf" default="false" description="额外录 /tf，体积大"/>
+
+  <arg name="log_root" default="$(env HOME)/autoware_logs"/>
+  <!-- 指定完整 bag 输出目录；留空则 record_bag.sh 自己按时间戳建 -->
+  <arg name="bag_dir" default=""/>
+
+  <include file="$(find-pkg-share autoware_launch)/launch/planning_simulator.launch.xml">
+    <arg name="map_path" value="$(var map_path)"/>
+    <arg name="vehicle_model" value="$(var vehicle_model)"/>
+    <arg name="sensor_model" value="$(var sensor_model)"/>
+  </include>
+
+  <executable cmd="bash $(find-pkg-share parking_test_tools)/scripts/record_bag.sh $(var bag_dir)"
+              if="$(var record_bag)"
+              output="screen"/>
+
+  <executable cmd="bash $(find-pkg-share parking_test_tools)/scripts/watch_after_ready.sh"
+              if="$(var watch_state)"
+              output="screen"/>
+</launch>

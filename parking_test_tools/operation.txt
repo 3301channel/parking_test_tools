@@ -1,0 +1,82 @@
+#启动autoware
+cd ~/autoware
+source install/setup.bash 
+ros2 launch autoware_launch planning_simulator.launch.xml   map_path:=$HOME/autoware_data/maps/sample-map-planning   vehicle_model:=sample_vehicle   sensor_model:=sample_sensor_kit
+
+#一键启动
+~/zzz/parking/run_parking.sh # 旧版watch_state
+
+~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh # 新版watch_state
+
+
+#launch启动（便于移植）
+source ~/autoware/install/setup.bash
+source ~/parking_ws/install/setup.bash
+ros2 launch parking_test_tools parking_test.launch.xml
+
+ros2 launch parking_test_tools parking_test.launch.xml 2>&1 | tee ~/session.log
+
+
+
+#查看是否进入parking模式（目标一旦确认，没有进行启动也优先进入parking模式）
+source ~/autoware/install/setup.bash && ros2 topic echo /planning/scenario_planning/scenario
+
+
+#查看costmap的膨胀情况
+python3 check_parking_costmap.py --gradient --radius 5 --out ./cm.png
+
+
+#查看试车实时状态
+python3 ~/zzz/parking/watch_state.py --line --verbose
+
+
+#轨迹质量
+python3 ~/zzz/parking/parking_test_tools/scripts/show_parking_result.py
+
+# 检查TF状态
+python3 ~/zzz/parking/parking_test_tools/scripts/tf_monitor.py --line
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+source ~/autoware/install/setup.bash
+
+# 终端 1
+ros2 launch autoware_costmap_generator costmap_generator.launch.xml \
+  input_objects:=/perception/object_recognition/objects \
+  input_points_no_ground:=/perception/obstacle_segmentation/pointcloud \
+  input_lanelet_map:=/map/vector_map \
+  input_scenario:=/planning/scenario_planning/scenario \
+  output_grid_map:=/debug/costmap_grid_map \
+  output_occupancy_grid:=/debug/occupancy_grid
+
+# 终端 2
+ros2 launch autoware_freespace_planner freespace_planner.launch.xml \
+  input_occupancy_grid:=/debug/occupancy_grid \
+  input_route:=/planning/mission_planning/route \
+  input_odometry:=/localization/kinematic_state \
+  input_scenario:=/planning/scenario_planning/scenario \
+  output_trajectory:=/debug/parking_trajectory \
+  is_completed:=/debug/parking_completed \
+  param_file:=$HOME/autoware/install/autoware_planning_config/share/autoware_planning_config/config/scenario_planning/parking/freespace_planner/freespace_planner.param.yaml
+
+
+
+
+*规划器与规划过程
+

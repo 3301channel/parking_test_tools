@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>parking_test_tools</name>
+  <version>1.0.0</version>
+  <description>
+    Autoware 泊车规划测试工具集：一键启动仿真、全量日志采集、实时状态监控、轨迹质量评估。
+    不修改 Autoware 任何源码或配置，可整体拷贝到车端工作空间使用。
+  </description>
+  <maintainer email="cn@example.com">cn</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- launch 层 -->
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <!-- 被拉起的仿真 -->
+  <exec_depend>autoware_launch</exec_depend>
+
+  <!-- 录包与回放 -->
+  <exec_depend>rosbag2_py</exec_depend>
+  <exec_depend>rosbag2_storage</exec_depend>
+
+  <!-- 分析脚本依赖（一般随 ROS 一起装，缺失时脚本会自行报错提示） -->
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

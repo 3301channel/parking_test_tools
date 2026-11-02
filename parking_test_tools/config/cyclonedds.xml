@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  CycloneDDS 配置（泊车测试专用）
+
+  要解决的是同一个报错的两个不同成因，两个都要治：
+
+  1) "Failed to find a free participant index for domain 0"
+     CycloneDDS 默认按 participant 索引分配端口，默认上限很小（索引 0-9）。
+     Autoware 全量启动有几十个独立进程，再加手动单起的模块就会撞满。
+     治法：把 MaxAutoParticipantIndex 放大到 CycloneDDS 允许的最大值 120。
+
+  2) "failed to increase socket receive buffer size to at least 10485760 bytes"
+     Autoware 官方 docker/files/cyclonedds.xml 要求 10 MB 接收缓冲，
+     但 Ubuntu 默认 net.core.rmem_max 只有 212992（208 KB），差 50 倍，
+     调整失败会让 rmw_create_node 直接报错。
+     治法：不指定缓冲大小，按系统上限走。
+
+  注意不要用 <ParticipantIndex>none</ParticipantIndex>：
+  它让每个进程随机挑端口，进程数一多就互相撞，反而更容易 create domain 失败。
+
+  如果以后调大了内核缓冲，想恢复 10 MB 设定：
+    sudo sysctl -w net.core.rmem_max=2147483647
+  再把下面注释掉的那行放回来。
+-->
+<CycloneDDS xmlns="https://cdds.io/config"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://cdds.io/config https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/master/etc/cyclonedds.xsd">
+  <Domain Id="any">
+    <Discovery>
+      <!-- 仍然按索引分配端口，但把范围放大到 CycloneDDS 的上限 -->
+      <ParticipantIndex>auto</ParticipantIndex>
+      <MaxAutoParticipantIndex>120</MaxAutoParticipantIndex>
+    </Discovery>
+    <General>
+      <Interfaces>
+        <!-- 单机仿真，走回环即可 -->
+        <NetworkInterface name="lo" priority="default" multicast="default"/>
+      </Interfaces>
+      <AllowMulticast>default</AllowMulticast>
+      <MaxMessageSize>65500B</MaxMessageSize>
+    </General>
+    <Internal>
+      <!-- 不强制提升：默认用内核 net.core.rmem_max（本机 208 KB） -->
+      <SocketReceiveBufferSize min="default"/>
+      <!-- 内核 rmem_max 调大后可改用： -->
+      <!-- <SocketReceiveBufferSize min="10MB"/> -->
+      <Watermarks>
+        <WhcHigh>500kB</WhcHigh>
+      </Watermarks>
+    </Internal>
+  </Domain>
+</CycloneDDS>
