@@ -1,17 +1,17 @@
 # 用法
 
-#启动autoware
+#### 启动autoware
 cd ~/autoware
 source install/setup.bash 
 ros2 launch autoware_launch planning_simulator.launch.xml   map_path:=$HOME/autoware_data/maps/sample-map-planning   vehicle_model:=sample_vehicle   sensor_model:=sample_sensor_kit
 
-#一键启动
+#### 一键启动
 ~/zzz/parking/run_parking.sh # 旧版watch_state
 
 ~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh # 新版watch_state
 
 
-#launch启动（便于移植）
+#### launch启动（便于移植）
 source ~/autoware/install/setup.bash
 source ~/parking_ws/install/setup.bash
 ros2 launch parking_test_tools parking_test.launch.xml
@@ -20,22 +20,22 @@ ros2 launch parking_test_tools parking_test.launch.xml 2>&1 | tee ~/session.log
 
 
 
-#查看是否进入parking模式（目标一旦确认，没有进行启动也优先进入parking模式）
+#### 查看是否进入parking模式
 source ~/autoware/install/setup.bash && ros2 topic echo /planning/scenario_planning/scenario
 
 
-#查看costmap的膨胀情况
+#### 查看costmap的膨胀情况
 python3 check_parking_costmap.py --gradient --radius 5 --out ./cm.png
 
 
-#查看试车实时状态
+#### 查看试车实时状态
 python3 ~/zzz/parking/watch_state.py --line --verbose
 
 
-#轨迹质量
+#### 轨迹质量
 python3 ~/zzz/parking/parking_test_tools/scripts/show_parking_result.py
 
-#检查TF状态
+#### 检查TF状态
 python3 ~/zzz/parking/parking_test_tools/scripts/tf_monitor.py --line
 
 
