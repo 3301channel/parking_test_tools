@@ -1,3 +1,5 @@
+# 用法
+
 #启动autoware
 cd ~/autoware
 source install/setup.bash 
@@ -33,7 +35,7 @@ python3 ~/zzz/parking/watch_state.py --line --verbose
 #轨迹质量
 python3 ~/zzz/parking/parking_test_tools/scripts/show_parking_result.py
 
-# 检查TF状态
+#检查TF状态
 python3 ~/zzz/parking/parking_test_tools/scripts/tf_monitor.py --line
 
 
@@ -56,7 +58,7 @@ python3 ~/zzz/parking/parking_test_tools/scripts/tf_monitor.py --line
 
 source ~/autoware/install/setup.bash
 
-# 终端 1
+#终端 1
 ros2 launch autoware_costmap_generator costmap_generator.launch.xml \
   input_objects:=/perception/object_recognition/objects \
   input_points_no_ground:=/perception/obstacle_segmentation/pointcloud \
@@ -65,7 +67,7 @@ ros2 launch autoware_costmap_generator costmap_generator.launch.xml \
   output_grid_map:=/debug/costmap_grid_map \
   output_occupancy_grid:=/debug/occupancy_grid
 
-# 终端 2
+#终端 2
 ros2 launch autoware_freespace_planner freespace_planner.launch.xml \
   input_occupancy_grid:=/debug/occupancy_grid \
   input_route:=/planning/mission_planning/route \
