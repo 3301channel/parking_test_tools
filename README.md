@@ -1,4 +1,5 @@
-# 启动autoware
+# 用法
+#### 启动autoware
 cd ~/autoware
 source install/setup.bash 
 ros2 launch autoware_launch planning_simulator.launch.xml   map_path:=$HOME/autoware_data/maps/sample-map-planning   vehicle_model:=sample_vehicle   sensor_model:=sample_sensor_kit
@@ -52,54 +53,36 @@ python3 check_parking_costmap.py --gradient --radius 5 --out ./cm.png
 python3 ~/zzz/parking/watch_state.py --line --verbose
 
 
-#轨迹质量
+#### 轨迹质量
 python3 ~/zzz/parking/parking_test_tools/scripts/show_parking_result.py
 
-# 检查TF状态
+#### 检查TF状态
 python3 ~/zzz/parking/parking_test_tools/scripts/tf_monitor.py --line
 
 
-#使用独显启动autoware
+#### 使用独显启动autoware
 
-# 1. 加载环境
+##### 1. 加载环境
 source ~/autoware/install/setup.bash
 
-# 2. 强制 RViz 用 NVIDIA 独显（解决卡顿）
+##### 2. 强制 RViz 用 NVIDIA 独显（解决卡顿）
 export __NV_PRIME_RENDER_OFFLOAD=1
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 
-# 3. 统一 DDS（避免节点大面积 exit code -6）
+##### 3. 统一 DDS（避免节点大面积 exit code -6）
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export CYCLONEDDS_URI="file://$HOME/zzz/parking/parking_test_tools/config/cyclonedds.xml"
 
-# 4. 启动
+##### 4. 启动
 ros2 launch autoware_launch planning_simulator.launch.xml \
   map_path:=$HOME/autoware_data/maps/Town04 \
   vehicle_model:=sample_vehicle \
   sensor_model:=sample_sensor_kit
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 source ~/autoware/install/setup.bash
 
-# 终端 1
+#### 终端 1
 ros2 launch autoware_costmap_generator costmap_generator.launch.xml \
   input_objects:=/perception/object_recognition/objects \
   input_points_no_ground:=/perception/obstacle_segmentation/pointcloud \
@@ -108,7 +91,7 @@ ros2 launch autoware_costmap_generator costmap_generator.launch.xml \
   output_grid_map:=/debug/costmap_grid_map \
   output_occupancy_grid:=/debug/occupancy_grid
 
-# 终端 2
+#### 终端 2
 ros2 launch autoware_freespace_planner freespace_planner.launch.xml \
   input_occupancy_grid:=/debug/occupancy_grid \
   input_route:=/planning/mission_planning/route \
