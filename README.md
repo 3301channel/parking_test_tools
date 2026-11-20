@@ -1,88 +1,129 @@
-# 用法
-#### 启动autoware
-cd ~/autoware
-source install/setup.bash 
-ros2 launch autoware_launch planning_simulator.launch.xml   map_path:=$HOME/autoware_data/maps/sample-map-planning   vehicle_model:=sample_vehicle   sensor_model:=sample_sensor_kit
-
-#### 一键启动
-~/zzz/parking/run_parking.sh # 旧版watch_state
-
-~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh # 新版watch_state
-
-#### 新增使用独显启动
-~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh \
-  map_path:=$HOME/autoware_data/maps/Town04
+parking_test_tools-->在线整合日志
+log_analysis--> 对获取的数据进行分析
+planner_node_test--> 节点输入测试
 
 
-~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh \
-  map_path:=$HOME/autoware_data/maps/parking_map/
+### 启动autoware
 
-####  启动CarLa
-./CarlaUE4.sh -prefernvidia -quality-level=Low
-
-
-#### 加载carla的autoware启动
-CARLA_PERCEPTION=0 ~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh \
-  map_path:=$HOME/autoware_data/maps/Town04 carla:=1
-
-
-#### 正常启动（town4地图）
+cd ~/autoware && source install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml \
-  map_path:=$HOME/autoware_data/maps/parking_map/
-
-
-#### launch启动（便于移植）
-source ~/autoware/install/setup.bash
-source ~/parking_ws/install/setup.bash
-ros2 launch parking_test_tools parking_test.launch.xml
-
-ros2 launch parking_test_tools parking_test.launch.xml 2>&1 | tee ~/session.log
-
-
-
-#### 查看是否进入parking模式
-#目标一旦确认，没有进行启动也优先进入parking模式
-source ~/autoware/install/setup.bash && ros2 topic echo /planning/scenario_planning/scenario
-
-
-#### 查看costmap的膨胀情况
-python3 check_parking_costmap.py --gradient --radius 5 --out ./cm.png
-
-
-#### 查看试车实时状态
-python3 ~/zzz/parking/watch_state.py --line --verbose
-
-
-#### 轨迹质量
-python3 ~/zzz/parking/parking_test_tools/scripts/show_parking_result.py
-
-#### 检查TF状态
-python3 ~/zzz/parking/parking_test_tools/scripts/tf_monitor.py --line
-
-
-#### 使用独显启动autoware
-
-##### 1. 加载环境
-source ~/autoware/install/setup.bash
-
-##### 2. 强制 RViz 用 NVIDIA 独显（解决卡顿）
-export __NV_PRIME_RENDER_OFFLOAD=1
-export __GLX_VENDOR_LIBRARY_NAME=nvidia
-
-##### 3. 统一 DDS（避免节点大面积 exit code -6）
-export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-export CYCLONEDDS_URI="file://$HOME/zzz/parking/parking_test_tools/config/cyclonedds.xml"
-
-##### 4. 启动
-ros2 launch autoware_launch planning_simulator.launch.xml \
-  map_path:=$HOME/autoware_data/maps/Town04 \
+  map_path:=$HOME/autoware_data/maps/Town02 \
   vehicle_model:=sample_vehicle \
   sensor_model:=sample_sensor_kit
 
 
-source ~/autoware/install/setup.bash
+### 加载carla启动autoware
 
-#### 终端 1
+cd ~/autoware && source install/setup.bash
+ros2 launch autoware_launch e2e_simulator.launch.xml \
+  map_path:=$HOME/autoware_data/maps/Town04 \
+  vehicle_model:=sample_vehicle \
+  sensor_model:=carla_sensor_kit \
+  simulator_type:=carla \
+  use_light_weight_sensor_mapping:=False \
+  sensor_mapping_file:=$HOME/xkk/apa_ws/src/apa_carla_simulation/config/apa_sensor_mapping_side4.yaml \
+  use_sim_time:=true
+
+
+### 启动CarLa
+
+cd ~/carla
+./CarlaUE4.sh -prefernvidia -quality-level=Low
+
+./CarlaUE4.sh -quality-level=Low
+
+
+### 启动carla（无窗口）
+
+cd ~/carla
+env -u VK_DRIVER_FILES \
+    VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json \
+    __NV_PRIME_RENDER_OFFLOAD=1 \
+    __VK_LAYER_NV_optimus=NVIDIA_only \
+    ./CarlaUE4.sh \
+      -RenderOffScreen \
+      -quality-level=Low \
+      -carla-rpc-port=2000
+
+### 一键启动
+~/zzz/parking/run_parking.sh # 旧版watch_state
+
+~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh # 新版watch_state
+
+### 新增使用独显启动
+
+~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh
+map_path:=$HOME/autoware_data/maps/Town04
+
+~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh
+map_path:=$HOME/autoware_data/maps/parking_map/
+
+### 加载carla的autoware启动
+
+CARLA_PERCEPTION=0 ~/zzz/parking/parking_test_tools/scripts/start_planning_sim_log.sh
+map_path:=$HOME/autoware_data/maps/Town04 carla:=1
+
+### 正常启动（town4地图）
+ros2 launch autoware_launch planning_simulator.launch.xml
+map_path:=$HOME/autoware_data/maps/parking_map/
+
+### launch启动（便于移植）
+source ~/autoware/install/setup.bash source ~/parking_ws/install/setup.bash ros2 launch parking_test_tools parking_test.launch.xml
+
+ros2 launch parking_test_tools parking_test.launch.xml 2>&1 | tee ~/session.log
+
+### log_analysis--> 对获取的数据进行分析
+
+source ~/autoware/install/setup.bash
+source ~/zzz/parking_ws/install/setup.bash
+ros2 launch parking_test_tools parking_test.launch.py        # 会话
+ros2 launch parking_test_tools parking_analysis.launch.py    # 收尾分析（默认 latest）
+
+### 想临时换回别的图，不用改代码
+ros2 launch parking_test_tools parking_test.launch.py map_path:=$HOME/autoware_data/maps/Town04
+
+### 查看是否进入parking模式
+
+#### 目标一旦确认，没有进行启动也优先进入parking模式 
+source ~/autoware/install/setup.bash && ros2 topic echo /planning/scenario_planning/scenario
+
+# 查看costmap的膨胀情况
+python3 check_parking_costmap.py --gradient --radius 5 --out ./cm.png
+
+### 查看试车实时状态
+python3 ~/zzz/parking/watch_state.py --line --verbose
+轨迹质量
+
+python3 ~/zzz/parking/parking_test_tools/scripts/show_parking_result.py
+
+### 检查TF状态
+python3 ~/zzz/parking/parking_test_tools/scripts/tf_monitor.py --line
+
+### 使用独显启动autoware
+### 1. 加载环境
+
+source ~/autoware/install/setup.bash
+### 2. 强制 RViz 用 NVIDIA 独显（解决卡顿）
+
+export __NV_PRIME_RENDER_OFFLOAD=1 export __GLX_VENDOR_LIBRARY_NAME=nvidia
+### 3. 统一 DDS（避免节点大面积 exit code -6）
+
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp export CYCLONEDDS_URI="file://$HOME/zzz/parking/parking_test_tools/config/cyclonedds.xml"
+### 4. 启动
+
+ros2 launch autoware_launch planning_simulator.launch.xml
+map_path:=$HOME/autoware_data/maps/Town04
+vehicle_model:=sample_vehicle
+sensor_model:=sample_sensor_kit
+
+
+
+
+### 影子实例
+
+### 终端 1
+
+source ~/autoware/install/setup.bash
 ros2 launch autoware_costmap_generator costmap_generator.launch.xml \
   input_objects:=/perception/object_recognition/objects \
   input_points_no_ground:=/perception/obstacle_segmentation/pointcloud \
@@ -91,7 +132,9 @@ ros2 launch autoware_costmap_generator costmap_generator.launch.xml \
   output_grid_map:=/debug/costmap_grid_map \
   output_occupancy_grid:=/debug/occupancy_grid
 
-#### 终端 2
+### 终端 2
+
+source ~/autoware/install/setup.bash
 ros2 launch autoware_freespace_planner freespace_planner.launch.xml \
   input_occupancy_grid:=/debug/occupancy_grid \
   input_route:=/planning/mission_planning/route \
@@ -101,8 +144,6 @@ ros2 launch autoware_freespace_planner freespace_planner.launch.xml \
   is_completed:=/debug/parking_completed \
   param_file:=$HOME/autoware/install/autoware_planning_config/share/autoware_planning_config/config/scenario_planning/parking/freespace_planner/freespace_planner.param.yaml
 
+## *规划器与规划过程
 
-
-
-*规划器与规划过程
 
