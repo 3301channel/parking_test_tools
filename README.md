@@ -1,6 +1,6 @@
-parking_test_tools-->在线整合日志
-log_analysis--> 对获取的数据进行分析
-planner_node_test--> 节点输入测试
+## parking_test_tools-->在线整合日志
+## log_analysis--> 对获取的数据进行分析
+## planner_node_test--> 节点输入测试
 
 
 ### 启动autoware
@@ -87,7 +87,7 @@ ros2 launch parking_test_tools parking_test.launch.py map_path:=$HOME/autoware_d
 #### 目标一旦确认，没有进行启动也优先进入parking模式 
 source ~/autoware/install/setup.bash && ros2 topic echo /planning/scenario_planning/scenario
 
-# 查看costmap的膨胀情况
+### 查看costmap的膨胀情况
 python3 check_parking_costmap.py --gradient --radius 5 --out ./cm.png
 
 ### 查看试车实时状态
@@ -144,6 +144,5 @@ ros2 launch autoware_freespace_planner freespace_planner.launch.xml \
   is_completed:=/debug/parking_completed \
   param_file:=$HOME/autoware/install/autoware_planning_config/share/autoware_planning_config/config/scenario_planning/parking/freespace_planner/freespace_planner.param.yaml
 
-## *规划器与规划过程
 
 
