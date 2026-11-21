@@ -1,0 +1,16 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='760' height='320'>
+<rect width='100%' height='100%' fill='#fff'/>
+<line x1='50' y1='64' x2='710' y2='64' stroke='#999'/>
+<line x1='50' y1='50' x2='50' y2='270' stroke='#999'/>
+<path d='M50.00,270.00 L280.64,270.00 L499.41,270.00 L710.00,64.78' fill='none' stroke='#1976d2' stroke-width='2.5'/>
+<path d='M50.00,101.72 L73.30,124.34 L96.59,146.87 L119.89,160.83 L143.19,170.39 L166.48,177.03 L189.78,181.47 L192.29,181.76 L215.58,184.24 L238.88,185.14 L262.18,184.55 L285.47,182.20 L308.74,175.74 L332.01,169.29 L355.29,162.83 L378.57,156.38 L401.86,149.92 L425.15,143.47 L448.45,137.01 L471.76,130.56 L495.07,124.10 L518.38,117.64 L541.70,111.19 L565.01,104.73 L588.33,98.28 L611.65,91.82 L634.96,85.37 L658.27,78.91 L681.58,72.46 L704.88,66.00 L709.30,64.78' fill='none' stroke='#f57c00' stroke-width='2.5'/>
+<rect x='500' y='20' width='12' height='12' fill='#1976d2'/>
+<text x='518' y='30' font-size='12' fill='#333' font-family='Noto Sans CJK SC, Source Han Sans SC, sans-serif'>源 trajectory</text>
+<rect x='500' y='38' width='12' height='12' fill='#f57c00'/>
+<text x='518' y='48' font-size='12' fill='#333' font-family='Noto Sans CJK SC, Source Han Sans SC, sans-serif'>最终 /planning/trajectory</text>
+<text x='690' y='300' font-size='12' fill='#555' font-family='Noto Sans CJK SC, Source Han Sans SC, sans-serif'>s [m]</text>
+<text x='10' y='24' font-size='12' fill='#555' font-family='Noto Sans CJK SC, Source Han Sans SC, sans-serif'>v [m/s]</text>
+<text x='20' y='54' font-size='12' fill='#555' font-family='Noto Sans CJK SC, Source Han Sans SC, sans-serif'>0.10</text>
+<text x='20' y='274' font-size='12' fill='#555' font-family='Noto Sans CJK SC, Source Han Sans SC, sans-serif'>-1.39</text>
+<text x='698' y='286' font-size='12' fill='#555' font-family='Noto Sans CJK SC, Source Han Sans SC, sans-serif'>2.83</text>
+</svg>

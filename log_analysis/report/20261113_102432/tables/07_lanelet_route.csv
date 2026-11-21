@@ -1,0 +1,2 @@
+bag_time_s,stamp_s,start_x,start_y,start_yaw,goal_x,goal_y,goal_z,goal_yaw,segments,primitives,uuid,allow_modification
+54.5098,13.45,266.639514,231.691094,1.619546,273.957794,236.427582,0.0043,-3.120765,3,3,55e48fc0a2eb7a8ee9fb571664b95a37,0

@@ -1,0 +1,127 @@
+version: 1
+
+topics:
+  grid_map: /planning/scenario_planning/parking/costmap_generator/grid_map
+  occupancy_grid: /planning/scenario_planning/parking/costmap_generator/occupancy_grid
+  trajectory: /planning/scenario_planning/parking/trajectory
+  final_trajectory: /planning/trajectory
+  is_completed: /planning/scenario_planning/parking/is_completed
+  processing_time: /planning/scenario_planning/parking/freespace_planner/debug/processing_time_ms
+  scenario: /planning/scenario_planning/scenario
+  route: /planning/mission_planning/route
+  goal: /planning/mission_planning/goal
+  odometry: /localization/kinematic_state
+  objects: /perception/object_recognition/objects
+  rosout: /rosout
+  diagnostics: /diagnostics
+  tf: /tf
+  tf_static: /tf_static
+  gear_status: /vehicle/status/gear_status
+  gear_command: /control/command/gear_cmd
+  # —— 执行链（D-* 规则）——
+  control_cmd: /control/command/control_cmd
+  follower_cmd: /control/trajectory_follower/control_cmd
+  actuation_cmd: /control/command/actuation_cmd
+  shift_gear_cmd: /control/shift_decider/gear_cmd
+  is_stopped: /control/vehicle_cmd_gate/is_stopped
+  is_start_requested: /control/vehicle_cmd_gate/is_start_requested
+  is_autonomous_available: /control/is_autonomous_available
+  operation_mode: /api/operation_mode/state
+  motion_state: /api/motion/state
+  routing_state: /api/routing/state
+  autoware_state: /autoware/state
+  velocity_status: /vehicle/status/velocity_status
+  steering_status: /vehicle/status/steering_status
+
+vehicle:
+  length: 4.89
+  width: 1.896
+  wheel_base: 2.79
+  rear_overhang: 1.1
+  front_overhang: 1.0
+  max_steer_rad: 0.70
+  margin: 0.40
+
+thresholds:
+  grid_calibration_min: 0.95
+  update_rate: 10.0
+  topic_rate_tolerance: 0.30
+  max_planning_ms_p95: 100.0
+  min_clearance_m: 0.10
+  max_arc_deviation_m: 0.50
+  max_goal_xy_error_m: 0.30
+  max_goal_yaw_error_deg: 15.0
+  frame_change_ratio_warn: 0.50
+  stall_frames: 5
+  max_latency_s: 1.00
+  min_step_m: 0.05
+  max_step_m: 1.50
+  # —— 执行链（D-*）——
+  cmd_speed_eps: 0.05          # m/s，控制指令低于此值视为"要求停"
+  cmd_latency_s: 0.50          # s，轨迹与指令的时间对齐容差
+  gear_confirm_s: 2.00         # s，换挡指令到档位上报的最大确认时间
+  follow_error_warn: 0.30      # m/s，指令与实际速度偏差 p95 告警线
+  stuck_speed: 0.10            # m/s，低于此值认为车没动
+  stuck_hold_s: 1.00           # s，"有指令但不动"持续这么久才计为异常
+
+checks:
+  C-01: true
+  C-02: true
+  C-03: true
+  C-04: true
+  C-05: true
+  C-06: true
+  C-07: true
+  C-08: true
+  C-09: true
+  C-10: true
+  C-11: true
+  C-12: true
+  P-01: true
+  P-02: true
+  P-03: true
+  P-04: true
+  P-05: true
+  P-06: true
+  P-07: true
+  P-08: true
+  P-09: true
+  P-10: true
+  P-11: true
+  P-12: true
+  D-01: true
+  D-02: true
+  D-03: true
+  D-04: true
+  D-05: true
+  D-06: true
+  D-07: true
+  D-08: true
+  T-01: true
+  T-02: true
+  T-03: true
+  T-04: true
+  T-05: true
+  T-06: true
+  T-07: true
+  T-08: true
+  T-09: true
+  T-10: true
+  T-11: true
+  T-12: true
+  T-13: true
+  S-01: true
+  S-02: true
+  S-03: true
+  S-04: true
+  S-05: true
+  S-06: true
+  S-07: true
+  S-08: true
+
+report:
+  language: zh
+  max_evidence_items: 8
+  svg:
+    enabled: true
+    grid_roi_pad_m: 5.0
